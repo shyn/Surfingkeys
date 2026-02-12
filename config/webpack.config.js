@@ -19,6 +19,10 @@ function modifyManifest(browser, mode, buffer) {
         manifest.content_security_policy = "script-src 'self'; object-src 'self'";
         manifest.permissions.push("cookies",
             "contextualIdentities");
+    } else if (browser === "safari") {
+        manifest.background.persistent = false;
+        manifest.options_page = "pages/options.html";
+        manifest.content_security_policy = "script-src 'self'; object-src 'self'";
     } else {
         manifest.permissions.push("proxy");
         manifest.permissions.push("tts");
