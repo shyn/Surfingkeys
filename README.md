@@ -21,6 +21,13 @@ Surfingkeys is doing its best to make full use of keyboard for web browsing, but
 * [Surfingkeys - Microsoft Edge Addons](https://microsoftedge.microsoft.com/addons/detail/kgnghhfkloifoabeaobjkgagcecbnppg) for Microsoft Edge
 * [Surfingkeys on the Mac App Store](https://apps.apple.com/us/app/surfingkeys/id1609752330) for Safari, works for both macOS and iOS, except that for iOS an external keyboard is required to be connected with your device. There is one exception of the [special feature designed for iOS device](https://youtu.be/xaTf2booQkQ) -- `Search selected with`.
 
+#### Manual installation for Safari
+
+1. Run `browser=safari npm run build:prod`.
+2. The extension files will be generated in `dist/production/safari`.
+3. Use `xcrun safari-web-extension-converter dist/production/safari` to create a Safari Web Extension App.
+4. Run the App to install the extension in Safari.
+
 ### Feature availability
 | Features \ Browsers | Chromium family (above 45) | Firefox (above 57) | Safari (above 15) |
 |:---------------|:-----|:-----|:-----|
