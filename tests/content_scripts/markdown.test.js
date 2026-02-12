@@ -5,9 +5,9 @@ import { waitForEvent } from '../utils';
 
 describe('markdown viewer', () => {
     let dispatchSKEvent, createClipboard, createInsert, createNormal,
-        createHints, createVisual, createFront, createAPI;
+        createHints, createVisual, createFront, createAPI, createDefaultMappings;
 
-    let normal, clipboard, api;
+    let normal, clipboard, api, Mode;
 
     beforeAll(async () => {
         const navigator = { userAgent: "Chrome", platform: "Mac" };
@@ -18,13 +18,16 @@ describe('markdown viewer', () => {
 
         global.chrome = {
             runtime: {
+                getURL: jest.fn(),
                 sendMessage: jest.fn(),
                 onMessage: {
                     addListener: jest.fn()
                 }
             },
-            extension: {
-                getURL: jest.fn()
+            storage: {
+                local: {
+                    get: jest.fn()
+                }
             }
         }
         global.DOMRect = jest.fn();
@@ -33,14 +36,17 @@ describe('markdown viewer', () => {
 
         dispatchSKEvent = require('src/content_scripts/common/runtime.js').dispatchSKEvent;
         createClipboard = require('src/content_scripts/common/clipboard.js').default;
+        Mode = require('src/content_scripts/common/mode.js').default;
         createInsert = require('src/content_scripts/common/insert.js').default;
         createNormal = require('src/content_scripts/common/normal.js').default;
         createHints = require('src/content_scripts/common/hints.js').default;
         createVisual = require('src/content_scripts/common/visual.js').default;
         createFront = require('src/content_scripts/front.js').default;
         createAPI = require('src/content_scripts/common/api.js').default;
+        createDefaultMappings = require('src/content_scripts/common/default.js').default;
         require('src/content_scripts/markdown');
 
+        Mode.init();
         document.scrollingElement = {};
         clipboard = createClipboard();
         const insert = createInsert();
@@ -50,6 +56,7 @@ describe('markdown viewer', () => {
         const visual = createVisual(clipboard, hints);
         const front = createFront(insert, normal, hints, visual);
         api = createAPI(clipboard, insert, normal, hints, visual, front, {});
+        createDefaultMappings(api, clipboard, insert, normal, hints, visual, front);
     });
 
     test("verify local shortcuts for markdown preview", async () => {
